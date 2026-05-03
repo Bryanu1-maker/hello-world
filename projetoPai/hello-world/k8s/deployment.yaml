@@ -14,10 +14,22 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: hello-world-app:latest
-        imagePullPolicy: Never
+        image: nginx:alpine
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html
+      initContainers:
+      - name: init-html
+        image: busybox
+        command: ['sh', '-c', 'echo "<h1>Hello World! 🚀</h1><p>Deploy com Jenkins + Kubernetes!</p>" > /html/index.html']
+        volumeMounts:
+        - name: html
+          mountPath: /html
+      volumes:
+      - name: html
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
